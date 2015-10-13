@@ -1,0 +1,19 @@
+.mainUI {
+	background-color: #eee;
+	margin-top: 200px;
+	padding: 10px;
+	text-align: center;
+	width: 400px;
+  	
+}
+
+.mainUI p {
+	font-style: italic;
+}
+
+.mainUI input {
+/*	width: 200;
+	height: 50px;
+	font-size: 2em;*/
+	text-align: center;
+}
