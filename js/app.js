@@ -165,7 +165,7 @@ function customizeModal(result) {
 	var pMessage = '';
 
 	//generate a number from 1 to 10
-	var imgNum = Math.floor(Math.random() * 10 + 1);
+	var imgNum = Math.floor(Math.random() * 6 + 1);
 	if (result === 'win') {
 		//select image
 		imageLocation = 'images/winner/winner' + imgNum + '.gif';
