@@ -33,23 +33,28 @@ function prepareNewGame() {
 	arrGuesses = [];	//reset array of guesses
 	//debugger;
 	console.log("preparing new game: ", targetNumber);
-	$playButton[0].disabled = true;	//enable play button DOES NOT WORK WITH JQUERY SELECTOR ???
+	$playButton[0].disabled = true;
+	$("#hintButton")[0].disabled = false;
 
 	//reset 5 hearts and their borders
 	for(var i = 0; i <= maxNumberOfGuesses; i ++) {
 		var classToModify = ".l" + i+ " span";
-		$(classToModify).addClass('glyphicon-heart-empty');
-		$(classToModify).removeClass('glyphicon-chevron-up');
-		$(classToModify).removeClass('glyphicon-chevron-down');
+		if($(classToModify).hasClass('glyphicon-chevron-up')) {
+			replaceIcon($(classToModify),'glyphicon-chevron-up', 'glyphicon-heart-empty');
+		}
+		if($(classToModify).hasClass('glyphicon-chevron-down')) {
+			replaceIcon($(classToModify),'glyphicon-chevron-down', 'glyphicon-heart-empty');
+		}
+		if($(classToModify).hasClass('glyphicon-ok')) {
+			replaceIcon($(classToModify),'glyphicon-ok', 'glyphicon-heart-empty');
+		}
 		$(classToModify).css("color", "#aaa");
 		$(classToModify).removeAttr('title');
-		paintBorderColor($(classToModify));
+		paintBorderColor($(classToModify));	//remove borders
 	}
 
 	//reset input value
 	$( "#inputNumber" )[0].value = '';
-
-
 }
 
 function generateRandomNumber() {
@@ -61,25 +66,22 @@ function generateRandomNumber() {
 function processGuess() {
   	//if guess has been guessed before, let player know try again
 	if(arrGuesses.indexOf(curGuess)!= -1) {
-		alert('You previously guessed this number - try a different one!');
+		$('#alertRepeatDiv').show(500);
 	}
 	else {
 		arrGuesses.push(curGuess);
 		console.log("arrGuesses: " + arrGuesses);
 
+		updateUI();
 	  	//compare guess to targetNumber
 		if(curGuess === targetNumber) {
+			//TODO: updateUI
 			playerWins();
-		}
-		else {
-			updateUI();
 		}
 	}
 	//evaluate whether arrGuesses is 'full'
-  	if(arrGuesses.length === maxNumberOfGuesses) {
-  		alert('Game Over');
-  		alert('Click OK to start new game');
-  		prepareNewGame();
+  	if(arrGuesses.length === maxNumberOfGuesses && curGuess !== targetNumber) {
+  		playerLoses();
   	}
 }
 
@@ -88,13 +90,15 @@ function updateUI(){
 	var classToModify = ".l" + arrGuesses.length + " span";
 	console.log(classToModify);
 
-	if(curGuess > targetNumber) {
-		$(classToModify).removeClass('glyphicon-heart-empty');
-		$(classToModify).addClass('glyphicon-chevron-down');
+	//replace glyphicon
+	if(curGuess === targetNumber) {
+		replaceIcon($(classToModify),'glyphicon-heart-empty', 'glyphicon-ok');
+	}
+	else if(curGuess > targetNumber) {
+		replaceIcon($(classToModify),'glyphicon-heart-empty', 'glyphicon-chevron-down');
 	}
 	else {
-		$(classToModify).removeClass('glyphicon-heart-empty');
-		$(classToModify).addClass('glyphicon-chevron-up');
+		replaceIcon($(classToModify),'glyphicon-heart-empty', 'glyphicon-chevron-up');
 	}
 
 	//determine which color to use for icon:
@@ -107,6 +111,7 @@ function updateUI(){
 		colToApply = colWarm;
 	}
 
+	//apply color to css of class to modify
 	$(classToModify).css("color", colToApply);
 
 	//store guess number in attr title (mouseOver)
@@ -120,7 +125,8 @@ function updateUI(){
 		trend = 'up';
 	}
 
-	if(arrGuesses.length > 1) {
+	//dont paint border for first guess, or for winning guess
+	if(arrGuesses.length > 1 && deviation !== 0) {
 		paintBorderColor($(classToModify), trend, colToApply);
 		displayAlertDiv(trend, colToApply);
 	}
@@ -128,9 +134,64 @@ function updateUI(){
 
 //playerWins function:
 function playerWins() {
-	alert('You win with ' + arrGuesses.length + ' guess[es]!');
-	//disable play button
-	//disable eye button
+	//$playButton[0].disabled = false;
+	$("#hintButton")[0].disabled = true;
+	customizeModal('win');
+}
+
+//playerLoses function:
+function playerLoses() {
+	customizeModal('lose');
+}
+
+function customizeModal(result) {
+
+	var imageLocation = '';
+	var modalHeader = '* * * YOU ARE A WINNER * * *';
+	var pMessage = '';
+
+	//generate a number from 1 to 10
+	var imgNum = Math.floor(Math.random() * 10 + 1);
+	if (result === 'win') {
+		//select image
+		imageLocation = 'images/winner/winner' + imgNum + '.gif';
+
+		//alter paragraph message
+		if(arrGuesses.length === 1){
+			pMessage = 'You nailed it first time!';
+		}
+		else 
+		{
+			pMessage = 'You did it in ' + arrGuesses.length + ' rounds!';
+		}
+
+	}
+	else {
+
+		//select image
+		imageLocation = 'images/loser/loser' + imgNum + '.gif';
+
+		//alter Modal Text
+		modalHeader = 'BETTER LUCK NEXT TIME!';
+
+		//alter paragraph message
+		pMessage = 'Bummer! The secret number was ' + targetNumber + '.';
+
+	}
+
+	$( ".modal-body" ).children( ".img-responsive" ).attr('src',imageLocation);
+	$( ".modal-body" ).children( "p" ).text(pMessage);
+	$( ".modal-header" ).children( "h4" ).text(modalHeader);
+	$('#myModal').modal('show');
+	//embed button to play new game in modal
+}
+
+function replaceIcon(classToModify,oldIcon, newIcon) {
+		//$(classToModify).removeClass('glyphicon-heart-empty');
+		//$(classToModify).addClass('glyphicon-ok');
+		classToModify.removeClass(oldIcon);
+		classToModify.addClass(newIcon);
+
 }
 
 function paintBorderColor(classToModify, trend, colorToApply) {
@@ -154,16 +215,17 @@ function paintBorderColor(classToModify, trend, colorToApply) {
 }
 
 function displayAlertDiv(trend, colorToApply) {
-	//var txt = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	
 	var txt = "You were closer before!";
-	if(trend === 'up') txt = "Getting closer!";
-	$('#alertDiv').text(txt);
-	$('#alertDiv').show(500);
+	if(trend === 'down') txt = "Getting closer!";
+	$('#alertInfoDiv').text(txt);
+	$('#alertInfoDiv').show(500);
 }
 
 
-/***************************
-*********events************/
+/**************************
+***** E V E N T S *********
+**************************/
 
 //submitGuess function:
 $( "#gameForm" ).submit(function( event ) {
@@ -176,6 +238,7 @@ $( "#inputNumber" ).change(function() {
   if($( "#inputNumber" )[0].value != "") {
   	curGuess = Number($( "#inputNumber" )[0].value);
   	$playButton[0].disabled = false;	
+	$('#alertInfoDiv').hide();
   }
   else 	{
   	$playButton[0].disabled = true;
@@ -189,10 +252,8 @@ $("#newGameButton").mouseup(function() {
 
 //viewHint button:
 $("#hintButton").mouseup(function() {
-	if(arrGuesses.length === 0) {
-		alert("you must make at least one guess!");
-	}
-	else {
+	var alertText = "you must make at least one guess!";
+	if(arrGuesses.length > 0) {
 
 		var lowerHotBound = targetNumber - (warmRegion - Math.round(Math.random() * arrGuesses.length, 0));
 		var upperHotBound = targetNumber + (warmRegion - Math.round(Math.random() * arrGuesses.length, 0));
@@ -205,7 +266,17 @@ $("#hintButton").mouseup(function() {
 			upperHotBound = 100;
 			lowerHotBound = 100 - (warmRegion - Math.round(Math.random() * arrGuesses.length, 0));
 		}
-		alert("Make a guess between " + lowerHotBound + " and " + upperHotBound);
+		alertText = "Make a guess between " + lowerHotBound + " and " + upperHotBound;
 	}
+
+	$('#alertInfoDiv').text(alertText);
+	$('#alertInfoDiv').show();
+});
+
+//resetGameModal button
+$('#modal-reset-game-button').mouseup(function() {
+	prepareNewGame();
+	//hide modal
+	$('#myModal').modal('hide');
 });
 

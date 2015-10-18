@@ -8,10 +8,38 @@
 	    <title>guess a number</title>
 	</head>
 	<body>
-		<div class="alert alert-info" role="alert"id="alertDiv" style="display: none">
+		<!--INSERT ALERT BAR-->
+		<div class="alert alert-info text-center" role="alert"id="alertInfoDiv" style="display: none">
 		  text here
 		</div>
 
+		<div class="alert alert-danger alert-dismissible" id="alertRepeatDiv" role="alert" style="display: none">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">	&times;</span></button>
+			<strong>You already tried this number!</strong>  Try a different one!
+		</div>
+
+		<!--INSERT MODAL-->
+		<div class="modal fade" id="myModal">
+		  <div class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title text-center">* * * YOU ARE A WINNER * * *</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p class="text-center"></p>
+		        <img src="images/winner/winner2.gif" class="img-responsive img-rounded center-block" alt="Responsive image">
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary" id="modal-reset-game-button">Play Again</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+		<!--END INSERT MODAL-->
+
+		<!--INSERT MAIN CONTAINER-->
 		<div class="container mainUI box-shadow--8dp">
 				<div class="row">	
 					<div class="col-sm-10 col-sm-offset-1">
@@ -34,11 +62,11 @@
 				    <div class="row">
 						<div class="col-sm-7 col-sm-offset-1 guess-feedback"><!--guess feedback - 5 fields-->
 							<ul class="list-unstyled list-inline glyphs">
-								<li  class="l1" data-toggle="tooltip" data-placement="top"><span class="glyphicon" aria-hidden="true"></span></li>
-								<li  class="l2" data-toggle="tooltip" data-placement="top"><span class="glyphicon" aria-hidden="true"></span></li>
-								<li  class="l3" data-toggle="tooltip" data-placement="top"><span class="glyphicon" aria-hidden="true"></span></li>
-								<li  class="l4"><span class="glyphicon" aria-hidden="true"></span></li>
-								<li  class="l5"><span class="glyphicon" aria-hidden="true"></span></li>
+								<li  class="l1" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
+								<li  class="l2" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
+								<li  class="l3" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
+								<li  class="l4"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
+								<li  class="l5"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
 							</ul>
 						</div>
 						<div class="col-sm-3"><!--two buttons-->
@@ -52,6 +80,7 @@
 
 		<!--Footer-->
 	    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	    <script src="js/app.js"></script>
 	</body>
 </html>
