@@ -23,6 +23,8 @@ $( document ).ready(function() {
 	console.log('!!!doc ready!!!');
 	$playButton = $('#playButton');
 	documentLoaded = true;
+	//TODO: Show instructions for first use
+	alert("Make a guess between 1 and 100./nYou have 5 tries./nThe direction of the arrow [insert] whether you should guess lower or higher./nColors indicate how close you are.")
 	prepareNewGame();
 });
 
@@ -33,6 +35,11 @@ function prepareNewGame() {
 	arrGuesses = [];	//reset array of guesses
 	//debugger;
 	console.log("preparing new game: ", targetNumber);
+
+	//in case they are still showing
+	$('#alertInfoDiv').hide();
+	$('#alertRepeatDiv').hide();
+
 	$playButton[0].disabled = true;
 	$("#hintButton")[0].disabled = false;
 
