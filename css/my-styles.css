@@ -35,6 +35,21 @@
 	max-width: 200px;
 }
 
+#instructions-modal-footer button{
+	width: 100%;
+}
+
+#result-modal-footer button{
+	width: 100%;
+}
+
+#modal-reset-game-button{
+	width: 65%;
+}
+
+#result-modal-close-button{
+	width: 30%;
+}
 /*.panel-heading h1 {
 	font-size: 300%;
 	text-align: center;

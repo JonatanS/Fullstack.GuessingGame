@@ -146,13 +146,15 @@ function updateUI(){
 
 //playerWins function:
 function playerWins() {
-	//$playButton[0].disabled = false;
 	$("#hintButton")[0].disabled = true;
+  	$playButton[0].disabled = true;	
 	customizeModal('win');
 }
 
 //playerLoses function:
 function playerLoses() {
+	$("#hintButton")[0].disabled = true;
+  	$playButton[0].disabled = true;	
 	customizeModal('lose');
 }
 
