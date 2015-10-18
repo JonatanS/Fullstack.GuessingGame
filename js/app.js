@@ -15,7 +15,9 @@ var documentLoaded = false;
 var curGuess = 0;
 var hotRegion = 5;
 var warmRegion = 10;
-
+var colHot = '#F06868';
+var colWarm = '#FAB57A';
+var colCold = '#80D6FF';
 //set Selectors
 $( document ).ready(function() {
 	console.log('!!!doc ready!!!');
@@ -32,16 +34,21 @@ function prepareNewGame() {
 	//debugger;
 	console.log("preparing new game: ", targetNumber);
 	$playButton[0].disabled = true;	//enable play button DOES NOT WORK WITH JQUERY SELECTOR ???
-	//enable eye button
-	//reset 5 hearts
+
+	//reset 5 hearts and their borders
 	for(var i = 0; i <= maxNumberOfGuesses; i ++) {
 		var classToModify = ".l" + i+ " span";
 		$(classToModify).addClass('glyphicon-heart-empty');
 		$(classToModify).removeClass('glyphicon-chevron-up');
 		$(classToModify).removeClass('glyphicon-chevron-down');
 		$(classToModify).css("color", "#aaa");
-		$(classToModify).attr('title', '');
+		$(classToModify).removeAttr('title');
+		paintBorderColor($(classToModify));
 	}
+
+	//reset input value
+	$( "#inputNumber" )[0].value = '';
+
 
 }
 
@@ -83,27 +90,40 @@ function updateUI(){
 
 	if(curGuess > targetNumber) {
 		$(classToModify).removeClass('glyphicon-heart-empty');
-		$(classToModify).addClass('glyphicon-chevron-up');
+		$(classToModify).addClass('glyphicon-chevron-down');
 	}
 	else {
 		$(classToModify).removeClass('glyphicon-heart-empty');
-		$(classToModify).addClass('glyphicon-chevron-down');
+		$(classToModify).addClass('glyphicon-chevron-up');
 	}
 
-	//evaluate whether guess is warm or cold and apply COLOR to chevron
-	if (Math.abs(targetNumber - curGuess)<= hotRegion) {
-		$(classToModify).css("color", "red");
+	//determine which color to use for icon:
+	var deviation = Math.abs(targetNumber - curGuess);
+	var colToApply = colCold;
+	if (deviation <= hotRegion) {
+		colToApply = colHot;
 	}
-	else if (Math.abs(targetNumber - curGuess)<= warmRegion) {
+	else if (deviation <= warmRegion) {
+		colToApply = colWarm;
+	}
 
-		$(classToModify).css("color", "orange");
-	}
-	else {
-		$(classToModify).css("color", "blue");
-	}
+	$(classToModify).css("color", colToApply);
 
 	//store guess number in attr title (mouseOver)
 	$(classToModify).attr('title', curGuess);
+
+	//paint border based on trend:
+	var trend = 'down';
+	var prevGuess = arrGuesses[arrGuesses.length-2];
+	console.log('prevGuess ', prevGuess);
+	if (Math.abs(targetNumber - curGuess) >= Math.abs(targetNumber - prevGuess)) {
+		trend = 'up';
+	}
+
+	if(arrGuesses.length > 1) {
+		paintBorderColor($(classToModify), trend, colToApply);
+		displayAlertDiv(trend, colToApply);
+	}
 }
 
 //playerWins function:
@@ -113,13 +133,37 @@ function playerWins() {
 	//disable eye button
 }
 
+function paintBorderColor(classToModify, trend, colorToApply) {
+	//style="color: rgb(170, 170, 170);border-bottom-style: double;
+	if (typeof(trend) === "undefined") {
+		//remove border styles
+		classToModify.css('border-top-style', '');
+		classToModify.css('border-bottom-style', '');
+	}
+	else{
+		if (trend === 'up') {
+		//classToModify.attr('border-top', 'red');
+			classToModify.css('border-top-style', 'double');
+		}
+
+		else if (trend === 'down') {
+		//classToModify.attr('border-bottom', 'red');
+			classToModify.css('border-bottom-style', 'double');
+		}
+	}
+}
+
+function displayAlertDiv(trend, colorToApply) {
+	//var txt = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	var txt = "You were closer before!";
+	if(trend === 'up') txt = "Getting closer!";
+	$('#alertDiv').text(txt);
+	$('#alertDiv').show(500);
+}
+
 
 /***************************
 *********events************/
-
-
-//viewResult button:
-
 
 //submitGuess function:
 $( "#gameForm" ).submit(function( event ) {
@@ -136,5 +180,32 @@ $( "#inputNumber" ).change(function() {
   else 	{
   	$playButton[0].disabled = true;
   }	
+});
+
+//newGame button
+$("#newGameButton").mouseup(function() {
+	prepareNewGame();
+});
+
+//viewHint button:
+$("#hintButton").mouseup(function() {
+	if(arrGuesses.length === 0) {
+		alert("you must make at least one guess!");
+	}
+	else {
+
+		var lowerHotBound = targetNumber - (warmRegion - Math.round(Math.random() * arrGuesses.length, 0));
+		var upperHotBound = targetNumber + (warmRegion - Math.round(Math.random() * arrGuesses.length, 0));
+		if (lowerHotBound < 0) {
+			lowerHotBound = 0;
+			upperHotBound = (warmRegion - Math.round(Math.random() * arrGuesses.length, 0));
+		}
+
+		if (upperHotBound > 100) {
+			upperHotBound = 100;
+			lowerHotBound = 100 - (warmRegion - Math.round(Math.random() * arrGuesses.length, 0));
+		}
+		alert("Make a guess between " + lowerHotBound + " and " + upperHotBound);
+	}
 });
 

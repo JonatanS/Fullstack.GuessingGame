@@ -8,6 +8,10 @@
 	    <title>guess a number</title>
 	</head>
 	<body>
+		<div class="alert alert-info" role="alert"id="alertDiv" style="display: none">
+		  text here
+		</div>
+
 		<div class="container mainUI box-shadow--8dp">
 				<div class="row">	
 					<div class="col-sm-10 col-sm-offset-1">
@@ -38,8 +42,8 @@
 							</ul>
 						</div>
 						<div class="col-sm-3"><!--two buttons-->
-							<button type="button" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" title="show result"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
-							<button type="button" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" title="new game"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+							<button type="button" class="btn btn-warning btn-xs" id="hintButton" data-toggle="tooltip" data-placement="top" title="show result"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+							<button type="button" class="btn btn-warning btn-xs" id="newGameButton" data-toggle="tooltip" data-placement="top" title="new game"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
 						</div><!--two buttons-->
 					</div><!--row-->
 			  	</div><!--guess feedback - 5 fields-->

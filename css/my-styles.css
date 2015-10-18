@@ -25,10 +25,11 @@
 
 .row{padding-top: 15px;}
 
-
-/*.l2 span {color: #aaa;}*/
-
-li span {color: #aaa;}
+/*ul .l3 span{
+	color: #aaa;
+	border-top: red;
+	border-top-style: solid;
+}*/
 
 .glyphs {
 	text-align: center;
