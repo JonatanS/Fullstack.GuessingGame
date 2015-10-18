@@ -8,6 +8,20 @@
 	    <title>guess a number</title>
 	</head>
 	<body>
+		<!--INSERT COLLAPSIBLE INSTUCTIONS
+		 <div class="panel panel-default">
+		    <div class="panel-heading" role="tab" id="panelHeading">
+		      <h1 class="panel-title">Guess a Number between 1 and 100</h1>
+		      <h6 class="panel-title">You have five guesses.<span>
+					<button class="btn btn-default btn-xs" type="button" data-toggle="collapse" data-target="#collapseInstructions" aria-expanded="false" aria-controls="collapseInstructions">more instructions</button></span>
+	  			</h6>
+	    	</div>
+		    <div id="collapseInstructions" class="collapse">
+		        The direction of the arrow <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span> whether you should guess lower or higher./nColors indicate how close you are.
+		    </div>
+		  </div>
+		END COLLAPSIBLE INSTUCTIONS-->
+
 		<!--INSERT ALERT BAR-->
 		<div class="alert alert-info text-center" role="alert"id="alertInfoDiv" style="display: none">
 		  text here
@@ -18,64 +32,92 @@
 			<strong>You already tried this number!</strong>  Try a different one!
 		</div>
 
-		<!--INSERT MODAL-->
-		<div class="modal fade" id="myModal">
+		<!--INSERT RESULT MODAL-->
+		<div class="modal fade" id="resultModal">
 		  <div class="modal-dialog modal-sm">
 		    <div class="modal-content">
-		      <div class="modal-header">
+		      <div class="modal-header" id="result-modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		        <h4 class="modal-title text-center">* * * YOU ARE A WINNER * * *</h4>
 		      </div>
-		      <div class="modal-body">
+		      <div class="modal-body" id="result-modal-body">
 		        <p class="text-center"></p>
 		        <img src="images/winner/winner2.gif" class="img-responsive img-rounded center-block" alt="Responsive image">
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		        <button type="button" class="btn btn-primary" id="modal-reset-game-button">Play Again</button>
+		        <button type="button" class="btn btn-warning" id="modal-reset-game-button">Play Again</button>
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
-		<!--END INSERT MODAL-->
+		<!--END RESULT MODAL-->
+
+		<!--INSERT INSTRUCITONS MODAL-->
+		<div class="modal fade" id="instructionsModal">
+		  <div class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title text-center">Instructions</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p>When you start game, a random number between 1 and 100 is generated.</p>
+		        <p>The goal is to guess this number in 5 steps or less.</p>
+		        <p>Hints:</p>
+	        	<ul class="list-unstyled">
+	        		<li><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>: Guess Lower.</li>
+	        		<li><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>: Guess Higher.</li>
+	        		<li id="blueList"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>-Color: You are off by +10 points.</li>
+	        		<li id="yellowList"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>-Color: You are within 10 points.</li>
+	        		<li id="redList"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>-Color: You are within 5 points.</li>
+	        	</ul>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Got it!</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+		<!--END RESULT MODAL-->
 
 		<!--INSERT MAIN CONTAINER-->
 		<div class="container mainUI box-shadow--8dp">
-				<div class="row">	
-					<div class="col-sm-10 col-sm-offset-1">
-						<form class="form-inline"  id="gameForm">
-				  			<div class="form-group">
-					  			<!--use form-group to assure that label and input are in one row-->
-					  			<p class="form-control-static">Enter Your Guess: </p>
+			<div class="row">	
+				<div class="col-sm-10 col-sm-offset-1">
+					<form class="form-inline"  id="gameForm">
+			  			<div class="form-group">
+				  			<!--use form-group to assure that label and input are in one row-->
+				  			<p class="form-control-static">Enter Your Guess: </p>
 
-								<label for="inputNumber" class="sr-only">Number between 1 and 100</label>
-								<input class="form-control input" id="inputNumber" type="number" min="1" max="100" placeholder="1-100">
-								<button type="submit" class="btn btn-default btn" id="playButton" >
-									<span class="glyphicon glyphicon-play"></span>
-									<!--disabled-->
-								</button>
+							<label for="inputNumber" class="sr-only">Number between 1 and 100</label>
+							<input class="form-control input" id="inputNumber" type="number" min="1" max="100" placeholder="1-100">
+							<button type="submit" class="btn btn-default btn" id="playButton" >
+								<span class="glyphicon glyphicon-play"></span>
+								<!--disabled-->
+							</button>
 
-				  			</div><!--form-group-->
-						</form>
+			  			</div><!--form-group-->
+					</form>
+				</div>
+			</div><!--form input row-->
+			    <div class="row">
+					<div class="col-sm-7 guess-feedback"><!--guess feedback - 5 fields-->
+						<ul class="list-unstyled list-inline glyphs">
+							<li  class="l1" data-toggle="tooltip" data-placement="top" title="wtf"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
+							<li  class="l2" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
+							<li  class="l3" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
+							<li  class="l4"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
+							<li  class="l5"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
+						</ul>
 					</div>
-				</div><!--form input row-->
-				    <div class="row">
-						<div class="col-sm-7 col-sm-offset-1 guess-feedback"><!--guess feedback - 5 fields-->
-							<ul class="list-unstyled list-inline glyphs">
-								<li  class="l1" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
-								<li  class="l2" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
-								<li  class="l3" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
-								<li  class="l4"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
-								<li  class="l5"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></li>
-							</ul>
-						</div>
-						<div class="col-sm-3"><!--two buttons-->
-							<button type="button" class="btn btn-warning btn-xs" id="hintButton" data-toggle="tooltip" data-placement="top" title="show result"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
-							<button type="button" class="btn btn-warning btn-xs" id="newGameButton" data-toggle="tooltip" data-placement="top" title="new game"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
-						</div><!--two buttons-->
-					</div><!--row-->
-			  	</div><!--guess feedback - 5 fields-->
-
+					<div class="col-sm-4"><!--three buttons-->
+						<button type="button" class="btn btn-warning btn-xs" id="hintButton" data-toggle="tooltip" data-placement="top" title="show result"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+						<button type="button" class="btn btn-warning btn-xs" id="newGameButton" data-toggle="tooltip" data-placement="top" title="new game"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+						<button type="button" class="btn btn-warning btn-xs" id="instructionsButton" data-toggle="tooltip" data-placement="top" title="instructions"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></button>
+					</div><!--three buttons-->
+				</div><!--row-->
+		  	</div><!--guess feedback - 5 fields-->
 		</div> <!--main container-->
 
 		<!--Footer-->

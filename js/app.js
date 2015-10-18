@@ -11,7 +11,6 @@ var maxNumberOfGuesses = 5;
 var arrGuesses = [];
 var targetNumber = 50; //randomly generated number 'targetNumber'
 var $playButton;
-var documentLoaded = false;
 var curGuess = 0;
 var hotRegion = 5;
 var warmRegion = 10;
@@ -22,12 +21,17 @@ var colCold = '#80D6FF';
 $( document ).ready(function() {
 	console.log('!!!doc ready!!!');
 	$playButton = $('#playButton');
-	documentLoaded = true;
-	//TODO: Show instructions for first use
-	alert("Make a guess between 1 and 100./nYou have 5 tries./nThe direction of the arrow [insert] whether you should guess lower or higher./nColors indicate how close you are.");
+	showInstructions();
+	$(function () {
+	  $('[data-toggle="tooltip"]').tooltip()
+	});
 	prepareNewGame();
 });
 
+//Show Instructions function
+function showInstructions() {
+	$('#instructionsModal').modal('show');
+}
 
 //newGame function:
 function prepareNewGame() {
@@ -46,11 +50,11 @@ function prepareNewGame() {
 	//reset 5 hearts and their borders
 	for(var i = 0; i <= maxNumberOfGuesses; i ++) {
 		var classToModify = ".l" + i+ " span";
-		if($(classToModify).hasClass('glyphicon-chevron-up')) {
-			replaceIcon($(classToModify),'glyphicon-chevron-up', 'glyphicon-heart-empty');
+		if($(classToModify).hasClass('glyphicon-arrow-up')) {
+			replaceIcon($(classToModify),'glyphicon-arrow-up', 'glyphicon-heart-empty');
 		}
-		if($(classToModify).hasClass('glyphicon-chevron-down')) {
-			replaceIcon($(classToModify),'glyphicon-chevron-down', 'glyphicon-heart-empty');
+		if($(classToModify).hasClass('glyphicon-arrow-down')) {
+			replaceIcon($(classToModify),'glyphicon-arrow-down', 'glyphicon-heart-empty');
 		}
 		if($(classToModify).hasClass('glyphicon-ok')) {
 			replaceIcon($(classToModify),'glyphicon-ok', 'glyphicon-heart-empty');
@@ -82,12 +86,13 @@ function processGuess() {
 		updateUI();
 	  	//compare guess to targetNumber
 		if(curGuess === targetNumber) {
-			//TODO: updateUI
+			$('#alertInfoDiv').hide();
 			playerWins();
 		}
 	}
 	//evaluate whether arrGuesses is 'full'
   	if(arrGuesses.length === maxNumberOfGuesses && curGuess !== targetNumber) {
+		$('#alertInfoDiv').hide();
   		playerLoses();
   	}
 }
@@ -102,10 +107,10 @@ function updateUI(){
 		replaceIcon($(classToModify),'glyphicon-heart-empty', 'glyphicon-ok');
 	}
 	else if(curGuess > targetNumber) {
-		replaceIcon($(classToModify),'glyphicon-heart-empty', 'glyphicon-chevron-down');
+		replaceIcon($(classToModify),'glyphicon-heart-empty', 'glyphicon-arrow-down');
 	}
 	else {
-		replaceIcon($(classToModify),'glyphicon-heart-empty', 'glyphicon-chevron-up');
+		replaceIcon($(classToModify),'glyphicon-heart-empty', 'glyphicon-arrow-up');
 	}
 
 	//determine which color to use for icon:
@@ -122,7 +127,7 @@ function updateUI(){
 	$(classToModify).css("color", colToApply);
 
 	//store guess number in attr title (mouseOver)
-	$(classToModify).attr('title', curGuess);
+	$(classToModify).parent().attr('data-original-title', curGuess);
 
 	//paint border based on trend:
 	var trend = 'down';
@@ -186,10 +191,10 @@ function customizeModal(result) {
 
 	}
 
-	$( ".modal-body" ).children( ".img-responsive" ).attr('src',imageLocation);
-	$( ".modal-body" ).children( "p" ).text(pMessage);
-	$( ".modal-header" ).children( "h4" ).text(modalHeader);
-	$('#myModal').modal('show');
+	$( "#result-modal-body" ).children( ".img-responsive" ).attr('src',imageLocation);
+	$( "#result-modal-body" ).children( "p" ).text(pMessage);
+	$( "result-modal-header" ).children( "h4" ).text(modalHeader);
+	$('#resultModal').modal('show');
 	//embed button to play new game in modal
 }
 
@@ -280,10 +285,15 @@ $("#hintButton").mouseup(function() {
 	$('#alertInfoDiv').show();
 });
 
+//instructions button
+$("#instructionsButton").mouseup(function() {
+	showInstructions();
+});
+
 //resetGameModal button
 $('#modal-reset-game-button').mouseup(function() {
 	prepareNewGame();
 	//hide modal
-	$('#myModal').modal('hide');
+	$('#resultModal').modal('hide');
 });
 

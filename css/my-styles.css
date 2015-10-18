@@ -35,8 +35,37 @@
 	max-width: 200px;
 }
 
-.modal-body p {
+/*.panel-heading h1 {
+	font-size: 300%;
+	text-align: center;
+	padding-top: 10px;
+	padding-bottom: 15px;
+}
+
+.panel-heading h6 {
+	text-align: center;
+
+}*/
+/*
+#collapseInstructions{
+	text-align: center;
+}*/
+
+
+#resultModal p {
 	font-size: 150%;
+}
+
+#blueList {
+	color: #80D6FF;
+}
+
+#redList {
+	color: #F06868;
+}
+
+#yellowList {
+	color: #FAB57A;
 }
 
 /*http://www.himpfen.com/shadow-effect-bootstrap-components/*/
