@@ -24,7 +24,7 @@ $( document ).ready(function() {
 	$playButton = $('#playButton');
 	documentLoaded = true;
 	//TODO: Show instructions for first use
-	alert("Make a guess between 1 and 100./nYou have 5 tries./nThe direction of the arrow [insert] whether you should guess lower or higher./nColors indicate how close you are.")
+	alert("Make a guess between 1 and 100./nYou have 5 tries./nThe direction of the arrow [insert] whether you should guess lower or higher./nColors indicate how close you are.");
 	prepareNewGame();
 });
 
